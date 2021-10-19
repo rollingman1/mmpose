@@ -418,6 +418,11 @@ class GeneratePoseTarget:
         """
 
         heatmap = np.zeros([img_h, img_w], dtype=np.float32)
+        # print('MMMMMMMMMMMM','centers')
+        # print('MMMMMMMMMMMM', centers) # MMMMMMMMMMMM [[32.91428757 13.9761343 ]] [[센터 좌표]]
+        # print('MMMMMMMMMMMM', 'max_values')
+        # print('MMMMMMMMMMMM', max_values)  # MMMMMMMMMMMM [0.88378906] 확률
+        # print(self.eps) # 0.0001
 
         for center, max_value in zip(centers, max_values):
             mu_x, mu_y = center[0], center[1]
@@ -443,6 +448,65 @@ class GeneratePoseTarget:
                                             patch)
 
         return heatmap
+
+    def generate_a_3d_heatmap(self, img_h, img_w, centers, sigma, max_values, img):
+        """Generate pseudo heatmap for one keypoint in one frame.
+
+        Args:
+            img_h (int): The height of the heatmap.
+            img_w (int): The width of the heatmap.
+            img: 이미지 경로
+            centers (np.ndarray): The coordinates of corresponding keypoints
+                (of multiple persons).
+            sigma (float): The sigma of generated gaussian.
+            max_values (np.ndarray): The max values of each keypoint.
+
+        Returns:
+            np.ndarray: The generated pseudo heatmap.
+        """
+
+        heatmap = np.zeros([img_h, img_w, 3], dtype=np.float32)
+        from PIL import Image
+        imgArray = np.array(Image.open(img))
+        # print('MMMMMMMMMMMM','centers')
+        # print('MMMMMMMMMMMM', centers) # MMMMMMMMMMMM [[32.91428757 13.9761343 ]] [[센터 좌표]]
+        # print('MMMMMMMMMMMM', 'max_values')
+        # print('MMMMMMMMMMMM', max_values)  # MMMMMMMMMMMM [0.88378906] 확률
+        # print(self.eps) # 0.0001
+
+        for center, max_value in zip(centers, max_values):
+            mu_x, mu_y = center[0], center[1]
+            if max_value < self.eps:
+                continue
+
+            st_x = max(int(mu_x - 3 * sigma), 0)
+            ed_x = min(int(mu_x + 3 * sigma) + 1, img_w)
+            st_y = max(int(mu_y - 3 * sigma), 0)
+            ed_y = min(int(mu_y + 3 * sigma) + 1, img_h)
+            x = np.arange(st_x, ed_x, 1, np.float32)
+            y = np.arange(st_y, ed_y, 1, np.float32)
+
+            # if the keypoint not in the heatmap coordinate system
+            if not (len(x) and len(y)):
+                continue
+            y = y[:, None]
+
+            patch = np.exp(-((x - mu_x)**2 + (y - mu_y)**2) / 2 / sigma**2)
+            patch = patch * max_value
+            #r
+            heatmap[st_y:ed_y,
+                    st_x:ed_x, 0] = np.maximum(heatmap[st_y:ed_y, st_x:ed_x, 0],
+                                            patch)
+            #g
+            heatmap[st_y:ed_y,
+            st_x:ed_x, 1] = np.maximum(heatmap[st_y:ed_y, st_x:ed_x, 0],
+                                       patch)
+            #b
+            heatmap[st_y:ed_y,
+            st_x:ed_x, 2] = np.maximum(heatmap[st_y:ed_y, st_x:ed_x, 0],
+                                       patch)
+
+        return heatmap + imgArray
 
     def generate_a_limb_heatmap(self, img_h, img_w, starts, ends, sigma,
                                 start_values, end_values):
@@ -548,7 +612,11 @@ class GeneratePoseTarget:
         heatmaps = []
         if self.with_kp:
             num_kp = kps.shape[1]
+            # print('MMMMMMMMMM num_kp', num_kp)
+            # print('MMMMMMMMMM max_values', max_values)
+
             for i in range(num_kp):
+                # print("MMMMMMMMM", 'kps one_videos', kps)
                 heatmap = self.generate_a_heatmap(img_h, img_w, kps[:, i],
                                                   sigma, max_values[:, i])
                 heatmaps.append(heatmap)
@@ -569,6 +637,41 @@ class GeneratePoseTarget:
 
         return np.stack(heatmaps, axis=-1)
 
+    def generate_3d_heatmap(self, img_h, img_w, kps, sigma, max_values, img_path):
+        """Generate pseudo heatmap for all keypoints and limbs in one frame (if
+        needed).
+
+        Args:
+            img_h (int): The height of the heatmap.
+            img_w (int): The width of the heatmap.
+            kps (np.ndarray): The coordinates of keypoints in this frame.
+            sigma (float): The sigma of generated gaussian.
+            max_values (np.ndarray): The confidence score of each keypoint.
+            img_path (string) : image path
+
+        Returns:
+            np.ndarray: The generated pseudo heatmap.
+        """
+
+        heatmap_image = np.zeros((img_h, img_w, 3), dtype=np.uint8)
+        heatmaps = []
+
+        if self.with_kp:
+            num_kp = kps.shape[1]
+            # print('MMMMMMMMMM num_kp', num_kp)
+            # print('MMMMMMMMMM max_values', max_values)
+
+            for i in range(num_kp):
+                # print("MMMMMMMMM", 'kps one_videos', kps)
+                heatmap = self.generate_a_3d_heatmap(img_h, img_w, kps[:, i],
+                                                sigma, max_values[:, i],
+                                                img_path)
+                #             heatmaps = np.append(heatmaps, heatmap, axis=0)
+                #             print(heatmaps.shape)
+                heatmaps.append(heatmap)
+
+        return np.stack(heatmaps, axis=-1)
+
     def gen_an_aug(self, results):
         """Generate pseudo heatmaps for all frames.
 
@@ -584,6 +687,8 @@ class GeneratePoseTarget:
 
         if 'keypoint_score' in results:
             all_kpscores = results['keypoint_score']
+            # print('MMMMMMMM', 'all_kpscores', all_kpscores)
+            # print('MMMMMMMM', 'all_kpscores', all_kpscores.shape)
         else:
             all_kpscores = np.ones(kp_shape[:-1], dtype=np.float32)
 
@@ -601,6 +706,46 @@ class GeneratePoseTarget:
                 max_values = kpscores
 
             hmap = self.generate_heatmap(img_h, img_w, kps, sigma, max_values)
+            imgs.append(hmap)
+
+        return imgs
+
+    def gen_an_3d_aug(self, results):
+        """Generate pseudo heatmaps for all frames.
+
+        Args:
+            results (dict): The dictionary that contains all info of a sample.
+
+        Returns:
+            list[np.ndarray]: The generated pseudo heatmaps.
+        """
+
+        all_kps = results['keypoint']
+        kp_shape = all_kps.shape
+
+        if 'keypoint_score' in results:
+            all_kpscores = results['keypoint_score']
+            # print('MMMMMMMM', 'all_kpscores', all_kpscores)
+            # print('MMMMMMMM', 'all_kpscores', all_kpscores.shape)
+        else:
+            all_kpscores = np.ones(kp_shape[:-1], dtype=np.float32)
+
+        img_h, img_w = results['img_shape']
+        num_frame = kp_shape[1]
+
+        frame_dir = results['frame_dir']
+
+        imgs = []
+        for i in range(num_frame):
+            sigma = self.sigma
+            kps = all_kps[:, i]
+            kpscores = all_kpscores[:, i]
+
+            max_values = np.ones(kpscores.shape, dtype=np.float32)
+            if self.use_score:
+                max_values = kpscores
+
+            hmap = self.generate_3d_heatmap(img_h, img_w, kps, sigma, max_values, frame_dir + '/img_{:05d}.jpg'.format(i))
             imgs.append(hmap)
 
         return imgs

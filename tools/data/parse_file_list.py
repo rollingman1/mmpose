@@ -191,11 +191,11 @@ def parse_sthv1_splits(level):
     """
     # Read the annotations
     # yapf: disable
-    class_index_file = 'data/sthv1/annotations/something-something-v1-labels.csv'  # noqa
+    class_index_file = 'data/sthv2/annotations/something-something-v1-labels.csv'  # noqa
     # yapf: enable
-    train_file = 'data/sthv1/annotations/something-something-v1-train.csv'
-    val_file = 'data/sthv1/annotations/something-something-v1-validation.csv'
-    test_file = 'data/sthv1/annotations/something-something-v1-test.csv'
+    train_file = 'data/sthv2/annotations/something-something-v1-train.csv'
+    val_file = 'data/sthv2/annotations/something-something-v1-validation.csv'
+    test_file = 'data/sthv2/annotations/something-something-v1-test.csv'
 
     with open(class_index_file, 'r') as fin:
         class_index = [x.strip() for x in fin]

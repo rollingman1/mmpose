@@ -156,6 +156,7 @@ def main():
         cfg.model,
         train_cfg=cfg.get('train_cfg'),
         test_cfg=cfg.get('test_cfg'))
+    print('MMMMMMMMMMMMMMMMMMMMMMMMMODEL is added')
 
     if len(cfg.module_hooks) > 0:
         register_module_hooks(model, cfg.module_hooks)
@@ -166,6 +167,7 @@ def main():
         datasets = [build_dataset(dataset) for dataset in cfg.data.train]
     else:
         datasets = [build_dataset(cfg.data.train)]
+    print(datasets)
 
     if len(cfg.workflow) == 2:
         # For simplicity, omnisource is not compatiable with val workflow,

@@ -8,11 +8,11 @@ model = dict(cls_head=dict(num_classes=174))
 
 # dataset settings
 dataset_type = 'RawframeDataset'
-data_root = 'data/sthv1/rawframes'
-data_root_val = 'data/sthv1/rawframes'
-ann_file_train = 'data/sthv1/sthv1_train_list_rawframes.txt'
-ann_file_val = 'data/sthv1/sthv1_val_list_rawframes.txt'
-ann_file_test = 'data/sthv1/sthv1_val_list_rawframes.txt'
+data_root = 'data/sthv2/rawframes'
+data_root_val = 'data/sthv2/rawframes'
+ann_file_train = 'data/sthv2/sthv1_train_list_rawframes.txt'
+ann_file_val = 'data/sthv2/sthv1_val_list_rawframes.txt'
+ann_file_test = 'data/sthv2/sthv1_val_list_rawframes.txt'
 
 sthv1_flip_label_map = {2: 4, 4: 2, 30: 41, 41: 30, 52: 66, 66: 52}
 img_norm_cfg = dict(

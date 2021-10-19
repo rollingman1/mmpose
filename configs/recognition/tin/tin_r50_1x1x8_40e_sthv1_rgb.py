@@ -5,11 +5,11 @@ model = dict(cls_head=dict(num_classes=174, dropout_ratio=0.8))
 
 # dataset settings
 dataset_type = 'RawframeDataset'
-data_root = 'data/sthv1/rawframes'
-data_root_val = 'data/sthv1/rawframes'
-ann_file_train = 'data/sthv1/sthv1_train_list_rawframes.txt'
-ann_file_val = 'data/sthv1/sthv1_val_list_rawframes.txt'
-ann_file_test = 'data/sthv1/sthv1_val_list_rawframes.txt'
+data_root = 'data/sthv2/rawframes'
+data_root_val = 'data/sthv2/rawframes'
+ann_file_train = 'data/sthv2/sthv1_train_list_rawframes.txt'
+ann_file_val = 'data/sthv2/sthv1_val_list_rawframes.txt'
+ann_file_test = 'data/sthv2/sthv1_val_list_rawframes.txt'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_bgr=False)
 train_pipeline = [

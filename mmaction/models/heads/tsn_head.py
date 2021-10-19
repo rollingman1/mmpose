@@ -72,6 +72,7 @@ class TSNHead(BaseHead):
         Returns:
             torch.Tensor: The classification scores for input samples.
         """
+        x = x.float()
         # [N * num_segs, in_channels, 7, 7]
         if self.avg_pool is not None:
             x = self.avg_pool(x)

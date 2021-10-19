@@ -29,9 +29,9 @@ Since the [sthv1 website](https://20bn.com/datasets/something-something/v1) does
 You can download all compressed file parts on [sthv1 website](https://20bn.com/datasets/something-something/v1) to `$MMACTION2/data/sthv1/` and use the following command to uncompress.
 
 ```shell
-cd $MMACTION2/data/sthv1/
+cd $MMACTION2/data/sthv2/
 cat 20bn-something-something-v1-?? | tar zx
-cd $MMACTION2/tools/data/sthv1/
+cd $MMACTION2/tools/data/sthv2/
 ```
 
 For users who only want to use RGB frames, you can skip to step 5 to generate file lists in the format of rawframes.
@@ -74,13 +74,13 @@ You can run the following script to soft link SSD.
 ```shell
 # execute these two line (Assume the SSD is mounted at "/mnt/SSD/")
 mkdir /mnt/SSD/sthv1_extracted/
-ln -s /mnt/SSD/sthv1_extracted/ ../../../data/sthv1/rawframes
+ln -s /mnt/SSD/sthv1_extracted/ ../../../data/sthv2/rawframes
 ```
 
 Then, you can run the following script to extract optical flow based on RGB frames.
 
 ```shell
-cd $MMACTION2/tools/data/sthv1/
+cd $MMACTION2/tools/data/sthv2/
 bash extract_flow.sh
 ```
 
@@ -91,7 +91,7 @@ This part is **optional** if you only want to use RGB frames.
 You can run the following script to encode videos.
 
 ```shell
-cd $MMACTION2/tools/data/sthv1/
+cd $MMACTION2/tools/data/sthv2/
 bash encode_videos.sh
 ```
 
@@ -100,7 +100,7 @@ bash encode_videos.sh
 You can run the follow script to generate file list in the format of rawframes and videos.
 
 ```shell
-cd $MMACTION2/tools/data/sthv1/
+cd $MMACTION2/tools/data/sthv2/
 bash generate_{rawframes, videos}_filelist.sh
 ```
 

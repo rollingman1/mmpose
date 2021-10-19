@@ -27,9 +27,9 @@
 将下载好的压缩文件放在 `$MMACTION2/data/sthv1/` 文件夹下，并使用以下脚本进行解压。
 
 ```shell
-cd $MMACTION2/data/sthv1/
+cd $MMACTION2/data/sthv2/
 cat 20bn-something-something-v1-?? | tar zx
-cd $MMACTION2/tools/data/sthv1/
+cd $MMACTION2/tools/data/sthv2/
 ```
 
 如果用户只想使用 RGB 帧，则可以跳过中间步骤至步骤 5 以直接生成视频帧的文件列表。
@@ -72,13 +72,13 @@ data = dict(
 ```shell
 # 执行这两行进行抽取（假设 SSD 挂载在 "/mnt/SSD/"）
 mkdir /mnt/SSD/sthv1_extracted/
-ln -s /mnt/SSD/sthv1_extracted/ ../../../data/sthv1/rawframes
+ln -s /mnt/SSD/sthv1_extracted/ ../../../data/sthv2/rawframes
 ```
 
 如果想抽取光流，则可以运行以下脚本从 RGB 帧中抽取出光流。
 
 ```shell
-cd $MMACTION2/tools/data/sthv1/
+cd $MMACTION2/tools/data/sthv2/
 bash extract_flow.sh
 ```
 
@@ -89,7 +89,7 @@ bash extract_flow.sh
 用户可以运行以下命令进行视频编码。
 
 ```shell
-cd $MMACTION2/tools/data/sthv1/
+cd $MMACTION2/tools/data/sthv2/
 bash encode_videos.sh
 ```
 
@@ -98,7 +98,7 @@ bash encode_videos.sh
 用户可以通过运行以下命令生成帧和视频格式的文件列表。
 
 ```shell
-cd $MMACTION2/tools/data/sthv1/
+cd $MMACTION2/tools/data/sthv2/
 bash generate_{rawframes, videos}_filelist.sh
 ```
 

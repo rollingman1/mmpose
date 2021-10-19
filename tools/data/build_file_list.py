@@ -23,7 +23,7 @@ def parse_args():
         type=str,
         choices=[
             'ucf101', 'kinetics400', 'kinetics600', 'kinetics700', 'thumos14',
-            'sthv1', 'sthv2', 'mit', 'mmit', 'activitynet', 'hmdb51', 'jester',
+            'sthv2', 'sthv2', 'mit', 'mmit', 'activitynet', 'hmdb51', 'jester',
             'diving48'
         ],
         help='dataset to be built file list')
@@ -194,7 +194,7 @@ def main():
 
     if args.dataset == 'ucf101':
         splits = parse_ucf101_splits(args.level)
-    elif args.dataset == 'sthv1':
+    elif args.dataset == 'sthv2':
         splits = parse_sthv1_splits(args.level)
     elif args.dataset == 'sthv2':
         splits = parse_sthv2_splits(args.level)
@@ -212,7 +212,7 @@ def main():
         splits = parse_diving48_splits()
     else:
         raise ValueError(
-            f"Supported datasets are 'ucf101, sthv1, sthv2', 'jester', "
+            f"Supported datasets are 'ucf101, sthv2, sthv2', 'jester', "
             f"'mmit', 'mit', 'kinetics400', 'kinetics600', 'kinetics700', but "
             f'got {args.dataset}')
 

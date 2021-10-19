@@ -1345,6 +1345,7 @@ class Flip:
         kp_x = kps[..., 0]
         kp_x[kp_x != 0] = img_width - kp_x[kp_x != 0]
         new_order = list(range(kps.shape[2]))
+        # print('MMMMMMMM',list(range(kps.shape[2])))
         if self.left_kp is not None and self.right_kp is not None:
             for left, right in zip(self.left_kp, self.right_kp):
                 new_order[left] = right

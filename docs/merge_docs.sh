@@ -18,7 +18,7 @@ sed -i 's/(\/tools\/data\/activitynet\/README.md/(#activitynet/g' supported_data
 sed -i 's/(\/tools\/data\/kinetics\/README.md/(#kinetics-400-600-700/g' supported_datasets.md
 sed -i 's/(\/tools\/data\/mit\/README.md/(#moments-in-time/g' supported_datasets.md
 sed -i 's/(\/tools\/data\/mmit\/README.md/(#multi-moments-in-time/g' supported_datasets.md
-sed -i 's/(\/tools\/data\/sthv1\/README.md/(#something-something-v1/g' supported_datasets.md
+sed -i 's/(\/tools\/data\/sthv2\/README.md/(#something-something-v1/g' supported_datasets.md
 sed -i 's/(\/tools\/data\/sthv2\/README.md/(#something-something-v2/g' supported_datasets.md
 sed -i 's/(\/tools\/data\/thumos14\/README.md/(#thumos-14/g' supported_datasets.md
 sed -i 's/(\/tools\/data\/ucf101\/README.md/(#ucf-101/g' supported_datasets.md
