@@ -731,7 +731,7 @@ class GeneratePoseTarget:
             all_kpscores = np.ones(kp_shape[:-1], dtype=np.float32)
 
         img_h, img_w = results['img_shape']
-        num_frame = kp_shape[1]
+        num_frame = 10
         print("MMMMMMMMMMmodel kp_shape", kp_shape)
         print("MMMMMMMMMMmodel num_frame", num_frame)
 
@@ -747,7 +747,7 @@ class GeneratePoseTarget:
             if self.use_score:
                 max_values = kpscores
 
-            hmap = self.generate_3d_heatmap(img_h, img_w, kps, sigma, max_values, '/' + frame_dir + '/img_{:05d}.jpg'.format(i+1))
+            hmap = self.generate_3d_heatmap(img_h, img_w, kps, sigma, max_values, '/' + frame_dir + '/img_{:05d}.jpg'.format(i))
             imgs.append(hmap)
 
         return imgs
