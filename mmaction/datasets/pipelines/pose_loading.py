@@ -653,7 +653,7 @@ class GeneratePoseTarget:
             np.ndarray: The generated pseudo heatmap.
         """
 
-        heatmap_image = np.zeros((img_h, img_w, 3), dtype=np.uint8)
+        # heatmap_image = np.zeros((img_h, img_w, 3), dtype=np.uint8)
         heatmaps = []
 
         if self.with_kp:
@@ -666,6 +666,7 @@ class GeneratePoseTarget:
                 heatmap = self.generate_a_3d_heatmap(img_h, img_w, kps[:, i],
                                                 sigma, max_values[:, i],
                                                 img_path)
+                print("MMMMMMMmodel heatmap.shape:", heatmap[:, :, 0].shape)
                 #             heatmaps = np.append(heatmaps, heatmap, axis=0)
                 #             print(heatmaps.shape)
                 heatmaps.append(heatmap)
@@ -754,16 +755,16 @@ class GeneratePoseTarget:
 
     def __call__(self, results, is_rgb=False):
         # if not is_rgb:
-        #     if not self.double:
-        #         results['imgs'] = np.stack(self.gen_an_aug(results))
-        #     else:
-        #         results_ = cp.deepcopy(results)
-        #         flip = Flip(
-        #             flip_ratio=1, left_kp=self.left_kp, right_kp=self.right_kp)
-        #         results_ = flip(results_)
-        #         results['imgs'] = np.concatenate(
-        #             [self.gen_an_aug(results),
-        #              self.gen_an_aug(results_)])
+        # if not self.double:
+        #     results['imgs'] = np.stack(self.gen_an_aug(results))
+        # else:
+        #     results_ = cp.deepcopy(results)
+        #     flip = Flip(
+        #         flip_ratio=1, left_kp=self.left_kp, right_kp=self.right_kp)
+        #     results_ = flip(results_)
+        #     results['imgs'] = np.concatenate(
+        #         [self.gen_an_aug(results),
+        #          self.gen_an_aug(results_)])
         # else:
         if not self.double:
             results['imgs'] = np.stack(self.gen_an_3d_aug(results))
