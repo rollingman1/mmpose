@@ -732,6 +732,8 @@ class GeneratePoseTarget:
 
         img_h, img_w = results['img_shape']
         num_frame = kp_shape[1]
+        print("MMMMMMMMMMmodel kp_shape", kp_shape)
+        print("MMMMMMMMMMmodel num_frame", num_frame)
 
         frame_dir = results['frame_dir']
 
@@ -745,22 +747,35 @@ class GeneratePoseTarget:
             if self.use_score:
                 max_values = kpscores
 
-            hmap = self.generate_3d_heatmap(img_h, img_w, kps, sigma, max_values, frame_dir + '/img_{:05d}.jpg'.format(i))
+            hmap = self.generate_3d_heatmap(img_h, img_w, kps, sigma, max_values, '/' + frame_dir + '/img_{:05d}.jpg'.format(i+1))
             imgs.append(hmap)
 
         return imgs
 
-    def __call__(self, results):
+    def __call__(self, results, is_rgb=False):
+        # if not is_rgb:
+        #     if not self.double:
+        #         results['imgs'] = np.stack(self.gen_an_aug(results))
+        #     else:
+        #         results_ = cp.deepcopy(results)
+        #         flip = Flip(
+        #             flip_ratio=1, left_kp=self.left_kp, right_kp=self.right_kp)
+        #         results_ = flip(results_)
+        #         results['imgs'] = np.concatenate(
+        #             [self.gen_an_aug(results),
+        #              self.gen_an_aug(results_)])
+        # else:
         if not self.double:
-            results['imgs'] = np.stack(self.gen_an_aug(results))
+            results['imgs'] = np.stack(self.gen_an_3d_aug(results))
         else:
             results_ = cp.deepcopy(results)
             flip = Flip(
                 flip_ratio=1, left_kp=self.left_kp, right_kp=self.right_kp)
             results_ = flip(results_)
             results['imgs'] = np.concatenate(
-                [self.gen_an_aug(results),
-                 self.gen_an_aug(results_)])
+                [self.gen_an_3d_aug(results),
+                 self.gen_an_3d_aug(results_)])
+
         return results
 
     def __repr__(self):
