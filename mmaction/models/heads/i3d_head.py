@@ -30,6 +30,7 @@ class I3DHead(BaseHead):
                  dropout_ratio=0.5,
                  init_std=0.01,
                  **kwargs):
+        print("MMMMMMMMMModel in_channels: ", in_channels)
         super().__init__(num_classes, in_channels, loss_cls, **kwargs)
 
         self.spatial_type = spatial_type
@@ -40,6 +41,7 @@ class I3DHead(BaseHead):
         else:
             self.dropout = None
         self.fc_cls = nn.Linear(self.in_channels, self.num_classes)
+        self.fc_cls.in_features = self.in_channels
 
         if self.spatial_type == 'avg':
             # use `nn.AdaptiveAvgPool3d` to adaptively match the in_channels.
@@ -67,8 +69,10 @@ class I3DHead(BaseHead):
         if self.dropout is not None:
             x = self.dropout(x)
         # [N, in_channels, 1, 1, 1]
+        # print("MMMMMMMMModel x-shape :", x.shape)
         x = x.view(x.shape[0], -1)
         # [N, in_channels]
         cls_score = self.fc_cls(x)
+        # print("MMMMMMMMModel cls_score.shape :", cls_score.shape)
         # [N, num_classes]
         return cls_score

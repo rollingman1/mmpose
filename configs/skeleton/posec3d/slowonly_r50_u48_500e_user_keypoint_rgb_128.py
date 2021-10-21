@@ -17,7 +17,7 @@ model = dict(
         dilations=(1, 1, 1)),
     cls_head=dict(
         type='I3DHead',
-        in_channels=512,
+        in_channels=128,
         num_classes=11,
         spatial_type='avg',
         dropout_ratio=0.5),
@@ -25,9 +25,9 @@ model = dict(
     test_cfg=dict(average_clips='prob'))
 
 dataset_type = 'PoseDataset'
-ann_file_train = 'data/user_data/annotations/result-train.pkl'
-ann_file_val = 'data/user_data/annotations/result-valid.pkl'
-ann_file_test = 'data/user_data/annotations/result-test.pkl'
+ann_file_train = 'data/210915-userdataset-11-128/pose/result-train.pkl'
+ann_file_val = 'data/210915-userdataset-11-128/pose/result-valid.pkl'
+ann_file_test = 'data/210915-userdataset-11-128/pose/result-test.pkl'
 
 left_kp = [0, 1, 4, 10, 11, 12, 13, 19, 20, 21]
 right_kp = [2, 3, 5, 13, 14, 15, 22, 23, 24]
@@ -38,7 +38,7 @@ train_pipeline = [
     dict(type='PoseCompact', hw_ratio=1., allow_imgpad=True),
     dict(type='Resize', scale=(-1, 64)),
     dict(type='RandomResizedCrop', area_range=(0.56, 1.0)),
-    dict(type='Resize', scale=(512, 512), keep_ratio=False),
+    dict(type='Resize', scale=(128, 128), keep_ratio=False),
     dict(type='Flip', flip_ratio=0.5),
     dict(
         type='GeneratePoseTarget',
@@ -85,7 +85,7 @@ test_pipeline = [
     dict(type='ToTensor', keys=['imgs'])
 ]
 data = dict(
-    videos_per_gpu=2,
+    videos_per_gpu=16,
     workers_per_gpu=2,
     test_dataloader=dict(videos_per_gpu=1),
     train=dict(
@@ -123,7 +123,7 @@ log_config = dict(
     ])
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/posec3d/slowonly_r50_u48_500e_user_keypoint_rgb'
+work_dir = './work_dirs/posec3d/slowonly_r50_u48_500e_user_keypoint_rgb_128'
 load_from = None
 resume_from = None
 find_unused_parameters = False
