@@ -33,7 +33,7 @@ left_kp = [0, 1, 4, 10, 11, 12, 13, 19, 20, 21]
 right_kp = [2, 3, 5, 13, 14, 15, 22, 23, 24]
 
 train_pipeline = [
-    dict(type='UniformSampleFrames', clip_len=48),
+    dict(type='UniformSampleFrames', clip_len=10),
     dict(type='PoseDecode'),
     dict(type='PoseCompact', hw_ratio=1., allow_imgpad=True),
     dict(type='Resize', scale=(-1, 64)),
@@ -51,7 +51,7 @@ train_pipeline = [
     dict(type='ToTensor', keys=['imgs', 'label'])
 ]
 val_pipeline = [
-    dict(type='UniformSampleFrames', clip_len=48, num_clips=1, test_mode=True),
+    dict(type='UniformSampleFrames', clip_len=10, num_clips=1, test_mode=True),
     dict(type='PoseDecode'),
     dict(type='PoseCompact', hw_ratio=1., allow_imgpad=True),
     dict(type='Resize', scale=(-1, 64)),
@@ -68,7 +68,7 @@ val_pipeline = [
 ]
 test_pipeline = [
     dict(
-        type='UniformSampleFrames', clip_len=48, num_clips=10, test_mode=True),
+        type='UniformSampleFrames', clip_len=10, num_clips=10, test_mode=True),
     dict(type='PoseDecode'),
     dict(type='PoseCompact', hw_ratio=1., allow_imgpad=True),
     dict(type='Resize', scale=(-1, 64)),

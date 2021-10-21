@@ -289,7 +289,7 @@ class FormatShape:
             num_clips = results['num_clips']
             clip_len = results['clip_len']
 
-            print("MMMMMMMMmodel", -1, num_clips, clip_len, imgs.shape[1:])
+            # print("MMMMMMMMmodel", -1, num_clips, clip_len, imgs.shape[1:])
             imgs = imgs.reshape((-1, num_clips, clip_len) + imgs.shape[1:])
             # N_crops x N_clips x L x H x W x C
             imgs = np.transpose(imgs, (0, 1, 5, 2, 3, 4))

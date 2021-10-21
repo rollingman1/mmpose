@@ -665,8 +665,8 @@ class GeneratePoseTarget:
                 # print("MMMMMMMMM", 'kps one_videos', kps)
                 heatmap = self.generate_a_3d_heatmap(img_h, img_w, kps[:, i],
                                                 sigma, max_values[:, i],
-                                                img_path)
-                print("MMMMMMMmodel heatmap.shape:", heatmap[:, :, 0].shape)
+                                                img_path)[:, :, 0]
+                # print("MMMMMMMmodel heatmap.shape:", heatmap[:, :, 0].shape)
                 #             heatmaps = np.append(heatmaps, heatmap, axis=0)
                 #             print(heatmaps.shape)
                 heatmaps.append(heatmap)
@@ -732,9 +732,9 @@ class GeneratePoseTarget:
             all_kpscores = np.ones(kp_shape[:-1], dtype=np.float32)
 
         img_h, img_w = results['img_shape']
-        num_frame = 10
-        print("MMMMMMMMMMmodel kp_shape", kp_shape)
-        print("MMMMMMMMMMmodel num_frame", num_frame)
+        num_frame = kp_shape[1]
+        # print("MMMMMMMMMMmodel kp_shape", kp_shape)
+        # print("MMMMMMMMMMmodel num_frame", num_frame)
 
         frame_dir = results['frame_dir']
 
