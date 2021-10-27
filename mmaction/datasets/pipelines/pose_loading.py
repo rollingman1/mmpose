@@ -466,8 +466,11 @@ class GeneratePoseTarget:
         """
 
         heatmap = np.zeros([img_h, img_w, 3], dtype=np.float32)
+        # print("MMMMMMMMMMMMmodel heatmap size: ", heatmap.shape)
         from PIL import Image
-        imgArray = np.array(Image.open(img))
+        # imgArray = np.array(Image.open(img).resize((64, 64)))
+        imgArray = np.array(Image.open(img), dtype=np.float32) / 512
+
         # print('MMMMMMMMMMMM','centers')
         # print('MMMMMMMMMMMM', centers) # MMMMMMMMMMMM [[32.91428757 13.9761343 ]] [[센터 좌표]]
         # print('MMMMMMMMMMMM', 'max_values')
@@ -492,7 +495,7 @@ class GeneratePoseTarget:
             y = y[:, None]
 
             patch = np.exp(-((x - mu_x)**2 + (y - mu_y)**2) / 2 / sigma**2)
-            patch = patch * max_value
+            patch = patch * max_value * 0.5 # 범위를 0~0.5까지로 조정
             #r
             heatmap[st_y:ed_y,
                     st_x:ed_x, 0] = np.maximum(heatmap[st_y:ed_y, st_x:ed_x, 0],
@@ -662,6 +665,7 @@ class GeneratePoseTarget:
             # print('MMMMMMMMMM max_values', max_values)
 
             for i in range(num_kp):
+                # print("MMMMMMMMmodel img_h, img_w :", img_h, img_w)
                 # print("MMMMMMMMM", 'kps one_videos', kps)
                 heatmap = self.generate_a_3d_heatmap(img_h, img_w, kps[:, i],
                                                 sigma, max_values[:, i],
@@ -737,9 +741,11 @@ class GeneratePoseTarget:
         # print("MMMMMMMMMMmodel num_frame", num_frame)
 
         frame_dir = results['frame_dir']
+        # print("MMMMMMMMModel frame_dir", frame_dir)
 
         imgs = []
         for i in range(num_frame):
+        # for i in range(10):
             sigma = self.sigma
             kps = all_kps[:, i]
             kpscores = all_kpscores[:, i]
