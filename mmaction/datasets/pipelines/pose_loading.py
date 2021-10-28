@@ -469,7 +469,7 @@ class GeneratePoseTarget:
         # print("MMMMMMMMMMMMmodel heatmap size: ", heatmap.shape)
         from PIL import Image
         # imgArray = np.array(Image.open(img).resize((64, 64)))
-        imgArray = np.array(Image.open(img), dtype=np.float32) / 512
+        imgArray = np.array(Image.open(img), dtype=np.float32) / 256
 
         # print('MMMMMMMMMMMM','centers')
         # print('MMMMMMMMMMMM', centers) # MMMMMMMMMMMM [[32.91428757 13.9761343 ]] [[센터 좌표]]
@@ -495,7 +495,7 @@ class GeneratePoseTarget:
             y = y[:, None]
 
             patch = np.exp(-((x - mu_x)**2 + (y - mu_y)**2) / 2 / sigma**2)
-            patch = patch * max_value * 0.5 # 범위를 0~0.5까지로 조정
+            patch = patch * max_value
             #r
             heatmap[st_y:ed_y,
                     st_x:ed_x, 0] = np.maximum(heatmap[st_y:ed_y, st_x:ed_x, 0],
@@ -509,7 +509,7 @@ class GeneratePoseTarget:
             st_x:ed_x, 2] = np.maximum(heatmap[st_y:ed_y, st_x:ed_x, 0],
                                        patch)
 
-        return heatmap + imgArray
+        return heatmap * imgArray
 
     def generate_a_limb_heatmap(self, img_h, img_w, starts, ends, sigma,
                                 start_values, end_values):
@@ -688,6 +688,7 @@ class GeneratePoseTarget:
         """
 
         all_kps = results['keypoint']
+        print("MMMMMMMMMModel frame dir",)
         kp_shape = all_kps.shape
 
         if 'keypoint_score' in results:
@@ -741,7 +742,8 @@ class GeneratePoseTarget:
         # print("MMMMMMMMMMmodel num_frame", num_frame)
 
         frame_dir = results['frame_dir']
-        # print("MMMMMMMMModel frame_dir", frame_dir)
+        print("MMMMMMMMModel frame_dir", frame_dir)
+        print("MMMMMMMMModel label", results['label'])
 
         imgs = []
         for i in range(num_frame):
