@@ -742,8 +742,8 @@ class GeneratePoseTarget:
         # print("MMMMMMMMMMmodel num_frame", num_frame)
 
         frame_dir = results['frame_dir']
-        print("MMMMMMMMModel frame_dir", frame_dir)
-        print("MMMMMMMMModel label", results['label'])
+        # print("MMMMMMMMModel frame_dir", frame_dir)
+        # print("MMMMMMMMModel label", results['label'])
 
         imgs = []
         for i in range(num_frame):
