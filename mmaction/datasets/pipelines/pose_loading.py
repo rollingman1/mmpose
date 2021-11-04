@@ -688,7 +688,7 @@ class GeneratePoseTarget:
         """
 
         all_kps = results['keypoint']
-        print("MMMMMMMMMModel frame dir",)
+        # print("MMMMMMMMMModel frame dir",)
         kp_shape = all_kps.shape
 
         if 'keypoint_score' in results:
@@ -763,27 +763,27 @@ class GeneratePoseTarget:
 
     def __call__(self, results, is_rgb=False):
         # if not is_rgb:
-        # if not self.double:
-        #     results['imgs'] = np.stack(self.gen_an_aug(results))
-        # else:
-        #     results_ = cp.deepcopy(results)
-        #     flip = Flip(
-        #         flip_ratio=1, left_kp=self.left_kp, right_kp=self.right_kp)
-        #     results_ = flip(results_)
-        #     results['imgs'] = np.concatenate(
-        #         [self.gen_an_aug(results),
-        #          self.gen_an_aug(results_)])
-        # else:
         if not self.double:
-            results['imgs'] = np.stack(self.gen_an_3d_aug(results))
+            results['imgs'] = np.stack(self.gen_an_aug(results))
         else:
             results_ = cp.deepcopy(results)
             flip = Flip(
                 flip_ratio=1, left_kp=self.left_kp, right_kp=self.right_kp)
             results_ = flip(results_)
             results['imgs'] = np.concatenate(
-                [self.gen_an_3d_aug(results),
-                 self.gen_an_3d_aug(results_)])
+                [self.gen_an_aug(results),
+                 self.gen_an_aug(results_)])
+        # else:
+        #if not self.double:
+        #    results['imgs'] = np.stack(self.gen_an_3d_aug(results))
+        #else:
+        #    results_ = cp.deepcopy(results)
+        #    flip = Flip(
+        #        flip_ratio=1, left_kp=self.left_kp, right_kp=self.right_kp)
+        #    results_ = flip(results_)
+        #    results['imgs'] = np.concatenate(
+        #        [self.gen_an_3d_aug(results),
+        #         self.gen_an_3d_aug(results_)])
 
         return results
 
