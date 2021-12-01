@@ -688,7 +688,7 @@ class GeneratePoseTarget:
         """
 
         all_kps = results['keypoint']
-        # print("MMMMMMMMMModel frame dir",)
+        # print("MMMMMMMMMModel frame dir",results['frame_dir'])
         kp_shape = all_kps.shape
 
         if 'keypoint_score' in results:

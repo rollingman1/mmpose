@@ -16,24 +16,24 @@ model = dict(
         temporal_strides=(1, 1, 2),
         dilations=(1, 1, 1)),
     cls_head=dict(
-        type='I3DHead',
+        type='TSNHead',
         in_channels=512,
-        num_classes=3,
+        num_classes=11,
         spatial_type='avg',
         dropout_ratio=0.5),
     train_cfg=dict(),
     test_cfg=dict(average_clips='prob'))
 
 dataset_type = 'PoseDataset'
-ann_file_train = 'data/hackerton-full-dataset/annotation/result-train.pkl'
-ann_file_val = 'data/hackerton-full-dataset/annotation/result-valid.pkl'
-ann_file_test = '/home/pepeotalk/Downloads/210915-userdataset-11-512/pose/result-train-scratch-shake-turn.pkl'
+ann_file_train = 'data/user_data/annotations/result-train.pkl'
+ann_file_val = 'data/user_data/annotations/result-valid.pkl'
+ann_file_test = 'data/user_data/annotations/result-test.pkl'
 
 left_kp = [0, 1, 4, 10, 11, 12, 13, 19, 20, 21]
 right_kp = [2, 3, 5, 13, 14, 15, 22, 23, 24]
 
 train_pipeline = [
-    dict(type='UniformSampleFrames', clip_len=10),
+    dict(type='UniformSampleFrames', clip_len=48),
     dict(type='PoseDecode'),
     dict(type='PoseCompact', hw_ratio=1., allow_imgpad=True),
     dict(type='Resize', scale=(-1, 64)),
@@ -51,7 +51,7 @@ train_pipeline = [
     dict(type='ToTensor', keys=['imgs', 'label'])
 ]
 val_pipeline = [
-    dict(type='UniformSampleFrames', clip_len=10, num_clips=1, test_mode=True),
+    dict(type='UniformSampleFrames', clip_len=48, num_clips=1, test_mode=True),
     dict(type='PoseDecode'),
     dict(type='PoseCompact', hw_ratio=1., allow_imgpad=True),
     dict(type='Resize', scale=(-1, 64)),
@@ -67,7 +67,8 @@ val_pipeline = [
     dict(type='ToTensor', keys=['imgs'])
 ]
 test_pipeline = [
-    dict(type='UniformSampleFrames', clip_len=10, num_clips=1, test_mode=True),
+    dict(
+        type='UniformSampleFrames', clip_len=48, num_clips=10, test_mode=True),
     dict(type='PoseDecode'),
     dict(type='PoseCompact', hw_ratio=1., allow_imgpad=True),
     dict(type='Resize', scale=(-1, 64)),
@@ -83,7 +84,6 @@ test_pipeline = [
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
     dict(type='ToTensor', keys=['imgs'])
 ]
-
 data = dict(
     videos_per_gpu=16,
     workers_per_gpu=2,
@@ -110,9 +110,9 @@ optimizer = dict(
 optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
 lr_config = dict(policy='CosineAnnealing', by_epoch=False, min_lr=0)
-total_epochs = 500
+total_epochs = 100
 checkpoint_config = dict(interval=10)
-workflow = [('train', 10), ('val', 10)]
+workflow = [('train', 10)]
 evaluation = dict(
     interval=10,
     metrics=['top_k_accuracy', 'mean_class_accuracy'],
@@ -123,7 +123,7 @@ log_config = dict(
     ])
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/posec3d/slowonly_r50_u48_100e_aihub_keypoint'
+work_dir = './work_dirs/posec3d/slowonly_r50_u48_10e_user_keypoint'
 load_from = None
 resume_from = None
 find_unused_parameters = False

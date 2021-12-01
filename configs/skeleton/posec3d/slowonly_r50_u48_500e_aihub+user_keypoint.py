@@ -25,9 +25,9 @@ model = dict(
     test_cfg=dict(average_clips='prob'))
 
 dataset_type = 'PoseDataset'
-ann_file_train = 'data/hackerton-full-dataset/annotation/result-train.pkl'
-ann_file_val = 'data/hackerton-full-dataset/annotation/result-valid.pkl'
-ann_file_test = '/home/pepeotalk/Downloads/210915-userdataset-11-512/pose/result-train-scratch-shake-turn.pkl'
+ann_file_train = '/home/pepeotalk/mmaction2/data/user_and_aihub/result-train-turn-shake-scratch.pkl'
+# ann_file_val = 'data/hackerton-full-dataset/annotation/result-valid.pkl'
+ann_file_test = '/home/pepeotalk/mmaction2/data/user_and_aihub/result-test-valid-turn-shake-scratch.pkl'
 
 left_kp = [0, 1, 4, 10, 11, 12, 13, 19, 20, 21]
 right_kp = [2, 3, 5, 13, 14, 15, 22, 23, 24]
@@ -37,7 +37,7 @@ train_pipeline = [
     dict(type='PoseDecode'),
     dict(type='PoseCompact', hw_ratio=1., allow_imgpad=True),
     dict(type='Resize', scale=(-1, 64)),
-    dict(type='RandomResizedCrop', area_range=(0.56, 1.0)),
+    # dict(type='RandomResizedCrop', area_range=(0.56, 1.0)),
     dict(type='Resize', scale=(56, 56), keep_ratio=False),
     dict(type='Flip', flip_ratio=0.5),
     dict(
@@ -93,11 +93,11 @@ data = dict(
         ann_file=ann_file_train,
         data_prefix='',
         pipeline=train_pipeline),
-    val=dict(
-        type=dataset_type,
-        ann_file=ann_file_val,
-        data_prefix='',
-        pipeline=val_pipeline),
+    # val=dict(
+    #     type=dataset_type,
+    #     ann_file=ann_file_val,
+    #     data_prefix='',
+    #     pipeline=val_pipeline),
     test=dict(
         type=dataset_type,
         ann_file=ann_file_test,
@@ -112,7 +112,7 @@ optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 lr_config = dict(policy='CosineAnnealing', by_epoch=False, min_lr=0)
 total_epochs = 500
 checkpoint_config = dict(interval=10)
-workflow = [('train', 10), ('val', 10)]
+workflow = [('train', 10)]
 evaluation = dict(
     interval=10,
     metrics=['top_k_accuracy', 'mean_class_accuracy'],
@@ -123,7 +123,7 @@ log_config = dict(
     ])
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/posec3d/slowonly_r50_u48_100e_aihub_keypoint'
+work_dir = './work_dirs/posec3d/slowonly_r50_u48_500e_aihub+user_keypoint'
 load_from = None
 resume_from = None
 find_unused_parameters = False
