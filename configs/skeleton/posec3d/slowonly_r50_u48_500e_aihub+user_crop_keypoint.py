@@ -27,7 +27,7 @@ model = dict(
 dataset_type = 'PoseDataset'
 ann_file_train = '/home/pepeotalk/mmaction2/data/user_and_aihub_crop/result-train-turn-shake-scratch.pkl'
 # ann_file_val = 'data/hackerton-full-dataset/annotation/result-valid.pkl'
-ann_file_test = '/home/pepeotalk/mmaction2/data/user_and_aihub_crop/result-test-valid-turn-shake-scratch.pkl'
+ann_file_test = '/home/pepeotalk/mmaction2/data/user_and_aihub_crop/result-test-shake-scratch.pkl'
 
 left_kp = [0, 1, 4, 10, 11, 12, 13, 19, 20, 21]
 right_kp = [2, 3, 5, 13, 14, 15, 22, 23, 24]
