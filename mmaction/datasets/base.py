@@ -190,10 +190,70 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
         gt_labels = [ann['label'] for ann in self.video_infos]
 
         for metric in metrics:
-            msg = f'Evaluating {metric} ...'
+            ### 여기
+            msg = f'Evaluating f1 score ...'
             if logger is None:
                 msg = '\n' + msg
             print_log(msg, logger=logger)
+
+            def f1_score(scores, labels, topk=(1,)):
+                """Calculate top k accuracy score.
+
+                Args:
+                    scores (list[np.ndarray]): Prediction scores for each class.
+                    labels (list[int]): Ground truth labels.
+                    topk (tuple[int]): K value for top_k_accuracy. Default: (1, ).
+
+                Returns:
+                    list[float]: Top k accuracy score for each k.
+                """
+                print('labels', labels)
+                print('len labels', len(labels))
+                class_num = 3  # 변경 해주
+                table = np.array(np.zeros((class_num, class_num)))
+
+                res = []
+                labels = np.array(labels)[:, np.newaxis]
+                for k in topk:
+                    max_k_preds = np.argsort(scores, axis=1)[:, -k:][:, ::-1]
+                    for i, pred in enumerate(max_k_preds):
+                        table[labels[i][0]][pred[0]] += 1
+                    match_array = np.logical_or.reduce(max_k_preds == labels, axis=1)
+                    topk_acc_score = match_array.sum() / match_array.shape[0]
+                    res.append(topk_acc_score)
+                print(table)
+                dict_list = []
+                for i in range(class_num):
+                    print('[t[i] for t in table]', [t[i] for t in table])
+                    print('table[i]', table[i])
+                    prec = table[i][i] / sum([t[i] for t in table])
+                    rec = table[i][i] / sum(table[i])
+                    pnr = {'precision': prec, 'recall': rec}
+                    print('precision for class', i, ':', pnr['precision'])
+                    print('recall for class', i, ':', pnr['recall'])
+
+                    dict_list.append(pnr)
+                    print('f1 score for class', i, ':', 2*(pnr['precision']*pnr['recall'])/(pnr['precision']+pnr['recall']))
+                    print('---------------------')
+                avg_prec = sum([i['precision'] for i in dict_list])/class_num
+                avg_recall = sum([i['recall'] for i in dict_list])/class_num
+                print('total precision:', avg_prec)
+                print('total recall:', avg_recall)
+                print('total f1 score:', 2*(avg_prec*avg_recall)/(avg_prec+avg_recall))
+
+                return res
+
+            res = f1_score(results, gt_labels)
+            print(res)
+            print(len(res))
+
+            log_msg = []
+            for k, acc in zip((1,), res):
+                eval_results[f'top{k}_acc'] = acc
+                log_msg.append(f'\ntop{k}_acc\t{acc:.4f}')
+            log_msg = ''.join(log_msg)
+            print_log(log_msg, logger=logger)
+            ### 여기
 
             if metric == 'top_k_accuracy':
                 topk = metric_options.setdefault('top_k_accuracy',
