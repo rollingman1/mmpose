@@ -164,10 +164,12 @@ def main():
     if cfg.omnisource:
         # If omnisource flag is set, cfg.data.train should be a list
         assert isinstance(cfg.data.train, list)
+        print('MMMMMMM: if cfg.omnisource/ build_dataset')
         datasets = [build_dataset(dataset) for dataset in cfg.data.train]
     else:
+        print('MMMMMMM: if cfg.omnisource else/ build_dataset')
         datasets = [build_dataset(cfg.data.train)]
-    print(datasets)
+    print('MMMMMMM: datasets', datasets)
 
     if len(cfg.workflow) == 2:
         # For simplicity, omnisource is not compatiable with val workflow,
@@ -187,6 +189,7 @@ def main():
             config=cfg.pretty_text)
 
     test_option = dict(test_last=args.test_last, test_best=args.test_best)
+    print('MMMMMMMM: test_option = dict(test_last=args.test_last, test_best=args.test_best)', test_option)
     train_model(
         model,
         datasets,
