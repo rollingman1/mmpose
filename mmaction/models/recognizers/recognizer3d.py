@@ -12,11 +12,11 @@ class Recognizer3D(BaseRecognizer):
 
     def forward_train(self, imgs, labels, **kwargs):
         """Defines the computation performed at every call when training."""
-        print('MMMMMMM: forward_tarin')
+        # print('MMMMMMM: forward_tarin')
 
         assert self.with_cls_head
-        print('MMMMMMM: img', imgs)
-        print('MMMMMMM: len_img', len(imgs))
+        # print('MMMMMMM: img', imgs)
+        # print('MMMMMMM: len_img', len(imgs))
         imgs = imgs.reshape((-1, ) + imgs.shape[2:])
         losses = dict()
 
@@ -27,10 +27,10 @@ class Recognizer3D(BaseRecognizer):
 
         cls_score = self.cls_head(x)
         gt_labels = labels.squeeze()
-        print('MMMMMMM: cls_score', cls_score)
-        print('MMMMMMM: gt_labels', gt_labels)
-        print('MMMMMMM: len(cls_score)', len(cls_score))
-        print('MMMMMMM: len(gt_labels)', len(gt_labels))
+        # print('MMMMMMM: cls_score', cls_score)
+        # print('MMMMMMM: gt_labels', gt_labels)
+        # print('MMMMMMM: len(cls_score)', len(cls_score))
+        # print('MMMMMMM: len(gt_labels)', len(gt_labels))
         loss_cls = self.cls_head.loss(cls_score, gt_labels, **kwargs)
         losses.update(loss_cls)
 
@@ -44,7 +44,7 @@ class Recognizer3D(BaseRecognizer):
         imgs = imgs.reshape((-1, ) + imgs.shape[2:])
 
         if self.max_testing_views is not None:
-            print('MMMMMMMM: self.max_testing_views is not None')
+            # print('MMMMMMMM: self.max_testing_views is not None')
             total_views = imgs.shape[0]
             assert num_segs == total_views, (
                 'max_testing_views is only compatible '
@@ -68,7 +68,7 @@ class Recognizer3D(BaseRecognizer):
             else:
                 feat = torch.cat(feats)
         else:
-            print('MMMMMMMMM: else')
+            # print('MMMMMMMMM: else')
             feat = self.extract_feat(imgs)
             if self.with_neck:
                 feat, _ = self.neck(feat)
@@ -100,13 +100,13 @@ class Recognizer3D(BaseRecognizer):
         assert self.with_cls_head
         cls_score = self.cls_head(feat)
         cls_score = self.average_clip(cls_score, num_segs)
-        print('MMMMMMM: cls_score', cls_score)
+        # print('MMMMMMM: cls_score', cls_score)
         return cls_score
 
     def forward_test(self, imgs):
         """Defines the computation performed at every call when evaluation and
         testing."""
-        print('MMMMMM: forward_test len', len(imgs))
+        # print('MMMMMM: forward_test len', len(imgs))
         return self._do_test(imgs).cpu().numpy()
 
     def forward_dummy(self, imgs, softmax=False):

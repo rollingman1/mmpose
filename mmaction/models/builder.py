@@ -70,7 +70,7 @@ def build_model(cfg, train_cfg=None, test_cfg=None):
     if obj_type in LOCALIZERS:
         return build_localizer(cfg)
     if obj_type in RECOGNIZERS:
-        print('MMMMMMM: build_recognizer')
+        # print('MMMMMMM: build_recognizer')
         return build_recognizer(cfg, train_cfg, test_cfg)
     if obj_type in DETECTORS:
         if train_cfg is not None or test_cfg is not None:

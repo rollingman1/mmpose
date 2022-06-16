@@ -331,7 +331,7 @@ def main():
 
     # build the dataloader
     # num_clip 하나만 사용
-    # print("MMMMMMMMMmodel cfg.data.test", cfg.data.test)
+    print("MMMMMMMMMmodel cfg.data.test", cfg.data.test)
     cfg.data.test.pipeline[0].num_clips = 1
     dataset = build_dataset(cfg.data.test, dict(test_mode=True))
     dataloader_setting = dict(

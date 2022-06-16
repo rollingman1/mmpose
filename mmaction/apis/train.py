@@ -40,7 +40,7 @@ def train_model(model,
         meta (dict | None): Meta dict to record some important information.
             Default: None
     """
-    print("MMMMMMM: start train_model")
+    # print("MMMMMMM: start train_model")
     logger = get_root_logger(log_level=cfg.log_level)
 
     # prepare data loaders
@@ -79,7 +79,7 @@ def train_model(model,
 
     # put model on gpus
     if distributed:
-        print('MMMMMMMM: distributed', distributed)
+        # print('MMMMMMMM: distributed', distributed)
         find_unused_parameters = cfg.get('find_unused_parameters', False)
         # Sets the `find_unused_parameters` parameter in
         # torch.nn.parallel.DistributedDataParallel
@@ -89,7 +89,7 @@ def train_model(model,
             broadcast_buffers=False,
             find_unused_parameters=find_unused_parameters)
     else:
-        print('MMMMMMMM: distributed else', distributed)
+        # print('MMMMMMMM: distributed else', distributed)
         model = MMDataParallel(
             model.cuda(cfg.gpu_ids[0]), device_ids=cfg.gpu_ids)
 
@@ -164,10 +164,10 @@ def train_model(model,
         runner.load_checkpoint(cfg.load_from)
     runner_kwargs = dict()
     if cfg.omnisource:
-        runner_kwargs = dict(train_ratio=train_ratio)
-    print('MMMMMMMM: runner.run', cfg.workflow, cfg.total_epochs)
+        # runner_kwargs = dict(train_ratio=train_ratio)
+    # print('MMMMMMMM: runner.run', cfg.workflow, cfg.total_epochs)
     runner.run(data_loaders, cfg.workflow, cfg.total_epochs, **runner_kwargs)
-    print('MMMMMMM: runner run finished')
+    # print('MMMMMMM: runner run finished')
 
     if test['test_last'] or test['test_best']:
         best_ckpt_path = None
@@ -213,7 +213,7 @@ def train_model(model,
             ckpts.append(best_ckpt_path)
 
         for name, ckpt in zip(names, ckpts):
-            print('MMMMMMM: test start')
+            # print('MMMMMMM: test start')
             if ckpt is not None:
                 runner.load_checkpoint(ckpt)
 

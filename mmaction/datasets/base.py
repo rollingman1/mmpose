@@ -209,7 +209,7 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
                 """
                 print('labels', labels)
                 print('len labels', len(labels))
-                class_num = 3  # 변경 해주
+                class_num = 10  # 변경 해주
                 table = np.array(np.zeros((class_num, class_num)))
 
                 res = []

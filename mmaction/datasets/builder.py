@@ -36,7 +36,7 @@ def build_dataset(cfg, default_args=None):
     Returns:
         Dataset: The constructed dataset.
     """
-    print('MMMMMMMM: build_dataset start')
+    # print('MMMMMMMM: build_dataset start')
     dataset = build_from_cfg(cfg, DATASETS, default_args)
     return dataset
 
